@@ -1,4 +1,5 @@
 from metrics import Metric
+import constant
 import os
 import numpy as np
 from PIL import Image
@@ -6,27 +7,43 @@ from scipy import ndimage
 from skimage.metrics import structural_similarity
 import csv
 
-ref_images_list = filter(lambda img: img.split(
-    '.')[-1] == "bmp", os.listdir('RefImages/'))
-impaired_images_list = filter(lambda img: img.split(
-    '.')[-1] == "bmp", os.listdir('ImpairedImages/'))
+ref_image_dir = '/home/SIC/asendjas/MEGAsync Downloads/t/'#OIQA/reference_images/'
+impaired_image_dir = '/home/SIC/asendjas/MEGAsync Downloads/t_/'#OIQA/distorted_images/'
 
-for ref_image in ref_images_list:
-    for impaired_image in impaired_images_list:
-        print('The reference image : {}'.format(ref_image))
-        print('The impaired image : {}\n'.format(impaired_image))
+def sorting_key(word):
+    return int(word.replace('img', '').replace('.png', '').replace('.jpg', '').replace('.bmp', ''))
 
-        ref = np.asfarray(Image.open('RefImages/' + ref_image).convert('L'))
+ref_images_list = sorted(filter(lambda img: img.split(
+    '.')[-1] == "bmp", os.listdir(ref_image_dir)), key=sorting_key)
+impaired_images_list = sorted(filter(lambda img: img.split(
+    '.')[-1] == "png" or "jpg", os.listdir(impaired_image_dir)), key=sorting_key)
 
-        imp = np.asfarray(Image.open('ImpairedImages/' + impaired_image))
+with open('results.csv', 'w', newline='') as csvfile:
+            
+    field_names = constant.METRICS
 
-        with open('results.csv', 'w', newline='') as csvfile:
-            field_names = ['image', 'PSNR', 'WS-PSNR', 'SPSNR', 'SPSNRNN', 'SSIM',
-                           'MSSSIM', 'GMSD', 'VIFp', 'MAE', 'RMSE', 'PAMSE']
-            writer = csv.DictWriter(csvfile, fieldnames=field_names)
-            writer.writeheader()
+    writer = csv.DictWriter(csvfile, fieldnames=field_names)
+    writer.writeheader()
+
+    start = constant.SUB_LIST_START
+    end = constant.SUB_LIST_START
+    
+    for ref_image in ref_images_list:
+
+        print('The reference image : {}\n'.format(ref_image))
+        sub_imp_list = impaired_images_list[start:end]
+
+        for impaired_image in impaired_images_list:
+
+            print('The impaired image : {}\n'.format(impaired_image))
+
+            ref = np.asfarray(Image.open(ref_image_dir + ref_image).convert('L'))
+
+            imp = np.asfarray(Image.open(impaired_image_dir + impaired_image).convert('L'))
+
+            
             writer.writerow(
-                {'image': impaired_image, 
+                {'image': impaired_image,
                 'PSNR': Metric.peakToSignalNoiseRatio(ref, imp),
                 'WS-PSNR': Metric.weightedSphericalpeakToSignalNoiseRatio(ref, imp),
                 'SPSNR': Metric.sphericalPeakToSignalNoiseRatio(ref, imp, True),
@@ -39,6 +56,11 @@ for ref_image in ref_images_list:
                 'RMSE': Metric.rootMeanSquaredError(ref, imp),
                 'PAMSE': Metric.perceptualFidelityAwareMeanSquaredError(ref, imp)})
 
+     
+
+        start = end
+        end = end + constant.SUB_LIST_STEP 
+        
         # print('PSNR : {}'.format(Metric.peakToSignalNoiseRatio(ref, imp)))
 
         # print('WS-PSNR : {}'.format(Metric.weightedSphericalpeakToSignalNoiseRatio(ref, imp)))
@@ -62,3 +84,4 @@ for ref_image in ref_images_list:
         # print('SPSNR : {}'.format(Metric.sphericalPeakToSignalNoiseRatio(ref, imp, True)))
 
         # print('SPSNRNN : {}'.format(Metric.sphericalPeakToSignalNoiseRatioNN(ref, imp)))
+

@@ -13,6 +13,7 @@ class Metric:
 
     @staticmethod
     def peakToSignalNoiseRatio(ref_image, impaired_image):
+        print('Computing PSNR ...')
         mse_value = mean_squared_error(ref_image, impaired_image)
         print('The MSE is : {}'.format(mse_value))
         if mse_value == 0:
@@ -25,6 +26,7 @@ class Metric:
 
     @staticmethod
     def weightedSphericalpeakToSignalNoiseRatio(ref_image, impaired_image):
+        print('Computing WS-PSNR ...')
         height, width = ref_image.shape
 
         weight_list = [[np.cos((i + 0.5 - height / 2) * np.pi / height)
@@ -56,7 +58,7 @@ class Metric:
 
     @staticmethod
     def structuralSimilarityIndex(ref_image, impaired_image, cs_map=False):
-
+        print('Computing SSIM ...')        
         window = Metric.fSpecialGauss(constant.SSIM_FILTER_SIZE,
                                       constant.SSIM_FILTER_SIGMA)
         C1 = (constant.SSIM_Constant_1 * constant.PIXEL_MAX) ** 2
@@ -86,7 +88,7 @@ class Metric:
 
     @staticmethod
     def multiScaleStructuralSimilarityIndex(ref_image, impaired_image):
-
+        print('Computing MSSSIM ...')        
         downsample_filter = np.ones((2, 2)) / 4.0
         mssim = np.array([])
         mcs = np.array([])
@@ -116,10 +118,12 @@ class Metric:
 
     @staticmethod
     def meanAbsoluteError(ref_image, impaired_image):
+        print('Computing MAE ...')        
         return np.mean(np.abs(ref_image - impaired_image))
 
     @staticmethod
     def perceptualFidelityAwareMeanSquaredError(ref_image, impaired_image, rescale=True):
+        print('Computing PAMSE ...')        
         emap = np.asarray(ref_image, dtype=np.float64) - \
             np.asarray(impaired_image, dtype=np.float64)
 
@@ -132,6 +136,7 @@ class Metric:
 
     @staticmethod
     def gradientMagnitudeSimilarityDeviation(ref_image, impaired_image, rescale=True):
+        print('Computing GMSD ...')        
         if rescale:
             scl = (255.0 / ref_image.max())
         else:
@@ -166,6 +171,7 @@ class Metric:
 
     @staticmethod
     def visualInformationFidelityP(ref_image, impaired_image):
+        print('Computing VIFp ...')        
         sigma_nsq = 2
         eps = 1e-10
 
@@ -247,7 +253,7 @@ class Metric:
 
     @staticmethod
     def sphericalPeakToSignalNoiseRatio(ref_image, impaired_image, color):
-
+        print('Computing SPSNR ...')        
         height, width, rect_coord = Metric.coordinateConvertion(ref_image)
 
         mse = 0
@@ -283,6 +289,7 @@ class Metric:
 
     @staticmethod
     def sphericalPeakToSignalNoiseRatioNN(ref_image, impaired_image):
+        print('Computing SPSNRNN ...')        
         height, width, rect_coord = Metric.coordinateConvertion(ref_image)
 
         # Calculate S_PSNR_NN
