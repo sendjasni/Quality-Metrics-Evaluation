@@ -307,18 +307,45 @@ class Metric:
             return 100
         return 10 * np.log10((constant.PIXEL_MAX**2 / mse))
 
-    # @staticmethod
-    # def laguerreGaussCircularHarmonic30(size, sigma):
-    #     x = np.linspace(-size/2.0, size/2.0, size)
-    #     y = np.linspace(-size/2.0, size/2.0, size)
-    #     xx, yy = np.meshgrid(x, y)
+    @staticmethod
+    def laguerreGaussCircularHarmonic30(size, sigma):
+        x = np.linspace(-size/2.0, size/2.0, size)
+        y = np.linspace(-size/2.0, size/2.0, size)
+        xx, yy = np.meshgrid(x, y)
 
-    #     r = np.sqrt(xx * xx + yy * yy)
-    #     gamma = np.arctan2(yy, xx)
-    #     l30 = - (1/6.0) * (1 / (sigma * sqrt(np.pi))) * np.exp(-r*r / (2*sigma*sigma)
-    #                                                            ) * (np.sqrt(r*r/(sigma*sigma)) ** 3) * np.exp(-1j * 3 * gamma)
-        
-    #     return l30
+        r = np.sqrt(xx * xx + yy * yy)
+        gamma = np.arctan2(yy, xx)
+        l30 = - (1/6.0) * (1 / (sigma * np.sqrt(np.pi))) * np.exp(-r*r / (2*sigma*sigma)
+                                                                  ) * (np.sqrt(r*r/(sigma*sigma)) ** 3) * np.exp(-1j * 3 * gamma)
 
-    # @staticmethod
-    # def relativePolarEdgeCoherence():
+        return l30
+
+    @staticmethod
+    def laguerreGaussCircularHarmonic10(size, sigma):
+        x = np.linspace(-size/2.0, size/2.0, size)
+        y = np.linspace(-size/2.0, size/2.0, size)
+        xx, yy = np.meshgrid(x, y)
+
+        r = np.sqrt(xx*xx + yy*yy)
+        gamma = np.arctan2(yy, xx)
+        l10 = - (1 / (sigma * np.sqrt(np.pi))) * np.exp(-r*r / (2*sigma *
+                                                                sigma)) * np.sqrt(r*r/(sigma*sigma)) * np.exp(-1j * gamma)
+
+        return l10
+
+    @staticmethod
+    def edgeCoherence(image):
+        l10 = Metric.laguerreGaussCircularHarmonic10(17, 2)
+        l30 = Metric.laguerreGaussCircularHarmonic30(17, 2)
+
+        y10 = ndimage.filters.convolve(image, np.real(
+            l10)) + 1j * ndimage.filters.convolve(image, np.imag(l10))
+        y30 = ndimage.filters.convolve(image, np.real(
+            l30)) + 1j * ndimage.filters.convolve(image, np.imag(l30))
+
+        return np.sum(- (np.absolute(y30) * np.absolute(y10)) * np.cos(np.angle(y30) - 3 * np.angle(y10)))
+
+    @staticmethod
+    def relativeEdgeCoherence(ref_image, impaired_image):
+        # return (Metric.edgeCoherence(ref_image) + 1) / (Metric.edgeCoherence(impaired_image) + 1)
+        return Metric.edgeCoherence(impaired_image) / Metric.edgeCoherence(ref_image)
