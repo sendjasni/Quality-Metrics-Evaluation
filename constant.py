@@ -16,4 +16,4 @@ SUB_LIST_START = 0
 SUB_LIST_END = 19
 
 METRICS = ['image', 'PSNR', 'WS-PSNR', 'SPSNR', 'SPSNRNN', 'SSIM',
-           'MSSSIM', 'GMSD', 'VIFp', 'MAE', 'RMSE', 'PAMSE']
+           'MSSSIM', 'GMSD', 'VIFp', 'MAE', 'RMSE', 'PAMSE', 'RECO']

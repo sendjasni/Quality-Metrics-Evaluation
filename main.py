@@ -54,12 +54,13 @@ with open('results.csv', 'w', newline='') as csvfile:
                 'VIFp': Metric.visualInformationFidelityP(ref, imp),
                 'MAE': Metric.meanAbsoluteError(ref, imp),
                 'RMSE': Metric.rootMeanSquaredError(ref, imp),
-                'PAMSE': Metric.perceptualFidelityAwareMeanSquaredError(ref, imp)})
+                'PAMSE': Metric.perceptualFidelityAwareMeanSquaredError(ref, imp),
+                'RECO': Metric.relativeEdgeCoherence(ref, imp)})
 
      
 
-        # start = end
-        # end = end + constant.SUB_LIST_STEP 
+        start = end
+        end = end + constant.SUB_LIST_STEP 
         
         # print('PSNR : {}'.format(Metric.peakToSignalNoiseRatio(ref, imp)))
 
