@@ -7,8 +7,8 @@ from scipy import ndimage
 from skimage.metrics import structural_similarity
 import csv
 
-ref_image_dir = '/home/SIC/asendjas/MEGAsync Downloads/t/'#OIQA/reference_images/'
-impaired_image_dir = '/home/SIC/asendjas/MEGAsync Downloads/t_/'#OIQA/distorted_images/'
+ref_image_dir =  'ref_images/' #'/home/SIC/asendjas/workspace/Quality-Metrics-Evaluation/t/'  #'/home/SIC/asendjas/MEGAsync Downloads/t/'#OIQA/reference_images/'
+impaired_image_dir =  'imp_images/' #'/home/SIC/asendjas/workspace/Quality-Metrics-Evaluation/t_/' #'/home/SIC/asendjas/MEGAsync Downloads/t_/'#OIQA/distorted_images/'
 
 def sorting_key(word):
     return int(word.replace('img', '').replace('.png', '').replace('.jpg', '').replace('.bmp', ''))
@@ -58,8 +58,8 @@ with open('results.csv', 'w', newline='') as csvfile:
 
      
 
-        start = end
-        end = end + constant.SUB_LIST_STEP 
+        # start = end
+        # end = end + constant.SUB_LIST_STEP 
         
         # print('PSNR : {}'.format(Metric.peakToSignalNoiseRatio(ref, imp)))
 
@@ -80,6 +80,7 @@ with open('results.csv', 'w', newline='') as csvfile:
         # print('VIFP : {}'.format(Metric.visualInformationFidelityP(ref, imp)))
 
         # print('SSIM___ : {}'.format(structural_similarity(ref, imp, gaussian_weights=False, use_sample_covariance=False)))
+        # # print('SSIM____ : {}'.format(compare_ssim(ref, imp)))
 
         # print('SPSNR : {}'.format(Metric.sphericalPeakToSignalNoiseRatio(ref, imp, True)))
 
