@@ -40,13 +40,15 @@ with open('results.csv', 'w', newline='') as csv_file:
         print('The reference image : {}\n'.format(ref_image))
         # print('sub list size : {}'.format(len(sub_imp_list)))
         # print('START : {}, END :  {}'.format(start, end))
-
+        
+        ref = np.asfarray(Image.open(
+                ref_image_dir + ref_image).convert('L'))
+        
         for impaired_image in sub_imp_list:
 
             print('The impaired image : {}\n'.format(impaired_image))
 
-            ref = np.asfarray(Image.open(
-                ref_image_dir + ref_image).convert('L'))
+            
 
             imp = np.asfarray(Image.open(
                 impaired_image_dir + impaired_image).convert('L'))
