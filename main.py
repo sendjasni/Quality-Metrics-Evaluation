@@ -7,8 +7,8 @@ from scipy import ndimage
 from skimage.metrics import structural_similarity
 import csv
 
-ref_image_dir = 'ref_images/'#'/home/SIC/asendjas/MEGAsync Downloads/OIQA/reference_images/'
-impaired_image_dir = 'imp_images/'#'/home/SIC/asendjas/MEGAsync Downloads/OIQA/distorted_images/'
+ref_image_dir = 'ref_images/'             # path to prestine images
+impaired_image_dir = 'imp_images/'        # path to distorted images
 
 
 def sorting_key(word):
